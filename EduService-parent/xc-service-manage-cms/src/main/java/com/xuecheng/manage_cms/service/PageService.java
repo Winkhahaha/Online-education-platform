@@ -12,6 +12,8 @@ import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import java.util.Optional;
+
 /**
  * @Author Gaoming
  * @Email mineok@foxmail.com
@@ -84,4 +86,37 @@ public class PageService {
         return new CmsPageResult(CommonCode.FAIL, null);
     }
 
+    // 根据pageId查询指定页面
+    public CmsPage findByPageId(String pageId) {
+        Optional<CmsPage> byId = cmsPageRepository.findById(pageId);
+        if (byId.isPresent()) {
+            return byId.get();
+        }
+        return null;
+    }
+
+    // 修改指定页面
+    public CmsPageResult updatePage(String pageId, CmsPage newPage) {
+        // 根据pageId查询指定页面
+        CmsPage oldPage = findByPageId(pageId);
+        if (oldPage != null) {
+            // 存在则修改oldPage
+            //更新模板id
+            oldPage.setTemplateId(newPage.getTemplateId());
+            //更新所属站点
+            oldPage.setSiteId(newPage.getSiteId());
+            //更新页面别名
+            oldPage.setPageAliase(newPage.getPageAliase());
+            //更新页面名称
+            oldPage.setPageName(newPage.getPageName());
+            //更新访问路径
+            oldPage.setPageWebPath(newPage.getPageWebPath());
+            //更新物理路径
+            oldPage.setPagePhysicalPath(newPage.getPagePhysicalPath());
+            // 提交修改
+            cmsPageRepository.save(oldPage);
+            return new CmsPageResult(CommonCode.SUCCESS, oldPage);
+        }
+        return new CmsPageResult(CommonCode.FAIL, null);
+    }
 }
