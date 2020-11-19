@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:v-on="http://www.w3.org/1999/xhtml" xmlns:v-bind="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Vue测试-常用指令</title>
+    <style>
+    </style>
+    <script src="vue.min.js"></script>
+    <script type="text/javascript">
+        window.onload = function () {
+            // 编写MVVM中的model部分以及VM部分
+            const VM = new Vue({
+                el: '#app',   // vm接管了app区域的管理
+                data: {       // model数据
+                    name:'哈哈哈',
+                    num1: 1,  // model变,Dom变
+                    num2: 0,
+                    result: 0,
+                    url: 'https//:www.baidu.com'
+                },
+                methods: {
+                    change: function () {
+                        this.result = Number.parseInt(this.num1) + Number.parseInt(this.num2);
+                        alert("计算结果:" + this.result);
+                    }
+                }
+            });
+        }
+    </script>
+</head>
+<body>
+<!--在body显示名称-->
+<div id="app">
+    <!--    v-model双向数据绑定:input/select-->
+    <!--    模型数据绑定到Dom对象,模型变,Dom变-->
+
+    <input type="text" v-model="num1"/> +
+    <input type="text" v-model="num2"/> =
+    <!--    Dom对象绑定到模型数据,Dom变,模型变-->
+    <!--    {{Number.parseInt(num1)+Number.parseInt(num2)}}-->
+
+    <!--    v-text:解决差值表达式闪烁问题-->
+    <span v-text="Number.parseInt(num1)+Number.parseInt(num2)"></span>
+
+    <!--    v-on:绑定事件-->
+    <button v-on:click="change">计算</button>
+    <!--    <span v-text="result"></span>-->
+    <br/>
+    <!--    v-bind:可以将数据对象绑定到任意Dom对象-->
+    <a v-bind:href="url"><span v-text="name"></span></a>
+</div>
+</body>
+</html>
