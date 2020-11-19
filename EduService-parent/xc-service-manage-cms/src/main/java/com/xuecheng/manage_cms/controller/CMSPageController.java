@@ -1,13 +1,13 @@
 package com.xuecheng.manage_cms.controller;
 
+import com.xuecheng.api.cms.CmsPageControllerApi;
+import com.xuecheng.framework.domain.cms.CmsPage;
 import com.xuecheng.framework.domain.cms.request.QueryPageRequest;
+import com.xuecheng.framework.domain.cms.response.CmsPageResult;
 import com.xuecheng.framework.model.response.QueryResponseResult;
 import com.xuecheng.manage_cms.service.PageService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @Author Gaoming
@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping("/cms/page")
-public class CMSPageController {
+public class CMSPageController implements CmsPageControllerApi {
     @Autowired
     private PageService pageService;
 
@@ -39,6 +39,12 @@ public class CMSPageController {
         return queryResponseResult;*/
         // 调用service演示查询mongdb
         return pageService.findList(page, size, queryPageRequest);
+    }
+
+    @Override
+    @PostMapping("/add")
+    public CmsPageResult add(@RequestBody CmsPage cmsPage) {
+        return pageService.addPage(cmsPage);
     }
 
 }

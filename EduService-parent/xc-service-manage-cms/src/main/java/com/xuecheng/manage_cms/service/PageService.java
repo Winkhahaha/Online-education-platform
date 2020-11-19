@@ -2,15 +2,15 @@ package com.xuecheng.manage_cms.service;
 
 import com.xuecheng.framework.domain.cms.CmsPage;
 import com.xuecheng.framework.domain.cms.request.QueryPageRequest;
+import com.xuecheng.framework.domain.cms.response.CmsPageResult;
 import com.xuecheng.framework.model.response.CommonCode;
 import com.xuecheng.framework.model.response.QueryResponseResult;
 import com.xuecheng.framework.model.response.QueryResult;
 import com.xuecheng.manage_cms.dao.CMSPageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 /**
  * @Author Gaoming
@@ -33,21 +33,55 @@ public class PageService {
      * @return
      */
     public QueryResponseResult findList(int page, int size, QueryPageRequest queryPageRequest) {
-
-        // 分页参数
-        if (page <= 0) {
-            page = 1;
+        if (queryPageRequest == null) {
+            queryPageRequest = new QueryPageRequest();
         }
-        page = page - 1;
-        if (size <= 0) {
-            size = 10;
+        // 条件值对象
+        CmsPage cmsPage = new CmsPage();
+        // 设置站点ID
+        if (!StringUtils.isEmpty(queryPageRequest.getSiteId())) {
+            cmsPage.setSiteId(queryPageRequest.getSiteId());
         }
-        Pageable pageable = PageRequest.of(page, size);
-        Page<CmsPage> all = cmsPageRepository.findAll(pageable);
+        // 模板ID
+        if (!StringUtils.isEmpty(queryPageRequest.getTemplateId())) {
+            cmsPage.setTemplateId(queryPageRequest.getTemplateId());
+        }
+        // 站点别名
+        if (!StringUtils.isEmpty(queryPageRequest.getPageAliase())) {
+            cmsPage.setPageAliase(queryPageRequest.getPageAliase());
+        }
+        // 自定义条件查询
+        // 定义条件匹配器(根据参数对其模糊查询)
+        ExampleMatcher exampleMatcher = ExampleMatcher.matching().
+                // ExampleMatcher.GenericPropertyMatchers.contains() 包含关键字
+                        withMatcher("pageAliase", ExampleMatcher.GenericPropertyMatchers.contains());
+        // 定义条件对象
+        Example<CmsPage> example = Example.of(cmsPage, exampleMatcher);
+        // 定义分页
+        Pageable pageable = PageRequest.of(page - 1, size);
+        // 实现自定义条件查询并且分页
+        Page<CmsPage> all = cmsPageRepository.findAll(example, pageable);
+        // 定义结果集
         QueryResult queryResult = new QueryResult();
         queryResult.setList(all.getContent());//数据列表
         queryResult.setTotal(all.getTotalElements());//数据总记录数
         QueryResponseResult queryResponseResult = new QueryResponseResult(CommonCode.SUCCESS, queryResult);
         return queryResponseResult;
     }
+
+    // 新增页面
+    public CmsPageResult addPage(CmsPage cmsPage) {
+        // 校验页面名称/站点ID/页面webPath的唯一性
+        // 根据页面名称/站点ID/页面webPath去cms_page集合,如果查到说明此页面已经存在,不存在则新增
+        if (cmsPageRepository.findByPageNameAndSiteIdAndPageWebPath(cmsPage.getPageName(), cmsPage.getSiteId(), cmsPage.getPageWebPath()) == null) {
+            // 数据库会自增ID
+            cmsPage.setPageId(null);
+            // 调用dao新增页面
+            cmsPageRepository.save(cmsPage);
+            return new CmsPageResult(CommonCode.SUCCESS, cmsPage);
+        }
+        // 添加失败
+        return new CmsPageResult(CommonCode.FAIL, null);
+    }
+
 }

@@ -27,7 +27,7 @@ public class CmsSite {
     private String siteId;
     //站点名称
     private String siteName;
-    //站点名称
+    //站点根url
     private String siteDomain;
     //站点端口
     private String sitePort;
