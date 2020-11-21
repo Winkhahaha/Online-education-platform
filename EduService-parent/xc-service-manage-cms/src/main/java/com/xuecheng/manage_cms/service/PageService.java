@@ -2,7 +2,10 @@ package com.xuecheng.manage_cms.service;
 
 import com.xuecheng.framework.domain.cms.CmsPage;
 import com.xuecheng.framework.domain.cms.request.QueryPageRequest;
+import com.xuecheng.framework.domain.cms.response.CmsCode;
 import com.xuecheng.framework.domain.cms.response.CmsPageResult;
+import com.xuecheng.framework.exception.CustomException;
+import com.xuecheng.framework.exception.ExceptionCast;
 import com.xuecheng.framework.model.response.CommonCode;
 import com.xuecheng.framework.model.response.QueryResponseResult;
 import com.xuecheng.framework.model.response.QueryResult;
@@ -73,18 +76,36 @@ public class PageService {
     }
 
     // 新增页面
+//    public CmsPageResult addPage(CmsPage cmsPage) {
+//        // 校验页面名称/站点ID/页面webPath的唯一性
+//        // 根据页面名称/站点ID/页面webPath去cms_page集合,如果查到说明此页面已经存在,不存在则新增
+//        if (cmsPageRepository.findByPageNameAndSiteIdAndPageWebPath(cmsPage.getPageName(), cmsPage.getSiteId(), cmsPage.getPageWebPath()) == null) {
+//            // 数据库会自增ID
+//            cmsPage.setPageId(null);
+//            // 调用dao新增页面
+//            cmsPageRepository.save(cmsPage);
+//            return new CmsPageResult(CommonCode.SUCCESS, cmsPage);
+//        }
+//        // 添加失败
+//        return new CmsPageResult(CommonCode.FAIL, null);
+//    }
     public CmsPageResult addPage(CmsPage cmsPage) {
+        if (cmsPage == null) {
+            // 参数为空,抛出异常
+        }
         // 校验页面名称/站点ID/页面webPath的唯一性
         // 根据页面名称/站点ID/页面webPath去cms_page集合,如果查到说明此页面已经存在,不存在则新增
-        if (cmsPageRepository.findByPageNameAndSiteIdAndPageWebPath(cmsPage.getPageName(), cmsPage.getSiteId(), cmsPage.getPageWebPath()) == null) {
-            // 数据库会自增ID
-            cmsPage.setPageId(null);
-            // 调用dao新增页面
-            cmsPageRepository.save(cmsPage);
-            return new CmsPageResult(CommonCode.SUCCESS, cmsPage);
+        if (cmsPageRepository.findByPageNameAndSiteIdAndPageWebPath(cmsPage.getPageName(), cmsPage.getSiteId(), cmsPage.getPageWebPath()) != null) {
+            // 页面已经存在
+            // 抛出异常:页面已经存在
+//            throw new CustomException(CommonCode.FAIL);
+            ExceptionCast.cast(CmsCode.CMS_ADDPAGE_EXISTSNAME);
         }
-        // 添加失败
-        return new CmsPageResult(CommonCode.FAIL, null);
+        // 数据库会自增ID
+        cmsPage.setPageId(null);
+        // 调用dao新增页面
+        cmsPageRepository.save(cmsPage);
+        return new CmsPageResult(CommonCode.SUCCESS, cmsPage);
     }
 
     // 根据pageId查询指定页面
