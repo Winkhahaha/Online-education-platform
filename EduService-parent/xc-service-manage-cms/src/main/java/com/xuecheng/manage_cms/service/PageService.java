@@ -1,5 +1,6 @@
 package com.xuecheng.manage_cms.service;
 
+import com.xuecheng.framework.domain.cms.CmsConfig;
 import com.xuecheng.framework.domain.cms.CmsPage;
 import com.xuecheng.framework.domain.cms.request.QueryPageRequest;
 import com.xuecheng.framework.domain.cms.response.CmsCode;
@@ -10,11 +11,13 @@ import com.xuecheng.framework.model.response.CommonCode;
 import com.xuecheng.framework.model.response.QueryResponseResult;
 import com.xuecheng.framework.model.response.QueryResult;
 import com.xuecheng.framework.model.response.ResponseResult;
+import com.xuecheng.manage_cms.dao.CMSConfigRepository;
 import com.xuecheng.manage_cms.dao.CMSPageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.Optional;
 
@@ -29,6 +32,12 @@ public class PageService {
 
     @Autowired
     private CMSPageRepository cmsPageRepository;
+
+    @Autowired
+    private CMSConfigRepository cmsConfigRepository;
+
+    @Autowired
+    private RestTemplate restTemplate;
 
     /**
      * 页面查询方法
@@ -149,5 +158,14 @@ public class PageService {
             return new ResponseResult(CommonCode.SUCCESS);
         }
         return new ResponseResult(CommonCode.FAIL);
+    }
+
+    // 根据Id查询cmsConfig
+    public CmsConfig getConfigById(String Id) {
+        Optional<CmsConfig> byId = cmsConfigRepository.findById(Id);
+        if (byId.isPresent()) {
+            return byId.get();
+        }
+        return null;
     }
 }

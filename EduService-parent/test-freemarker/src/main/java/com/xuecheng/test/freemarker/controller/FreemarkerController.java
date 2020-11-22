@@ -21,17 +21,16 @@ public class FreemarkerController {
     @Autowired
     RestTemplate restTemplate;
 
-    /*
     @RequestMapping("/banner")
-    public String index_banner(Map<String, Object> map){
+    public String index_banner(Map<String, Object> map) {
+        // 使用restTemplate请求轮播图的模型数据
         String dataUrl = "http://localhost:31001/cms/config/getmodel/5a791725dd573c3574ee333f";
         ResponseEntity<Map> forEntity = restTemplate.getForEntity(dataUrl, Map.class);
         Map body = forEntity.getBody();
-        map.put("model",body);
+        // 设置模型数据
+        map.putAll(body);
         return "index_banner";
     }
-
-    */
 
     // 测试1
     @RequestMapping("/test1")
@@ -56,16 +55,16 @@ public class FreemarkerController {
         stus.add(stu1);
         stus.add(stu2);
         //向数据模型放数据
-        map.put("stus",stus);
+        map.put("stus", stus);
         //准备map数据
-        HashMap<String,Student> stuMap = new HashMap<>();
-        stuMap.put("stu1",stu1);
-        stuMap.put("stu2",stu2);
+        HashMap<String, Student> stuMap = new HashMap<>();
+        stuMap.put("stu1", stu1);
+        stuMap.put("stu2", stu2);
         //向数据模型放数据
-        map.put("stu1",stu1);
+        map.put("stu1", stu1);
         //向数据模型放数据
-        map.put("stuMap",stuMap);
-        map.put("point",102920122);
+        map.put("stuMap", stuMap);
+        map.put("point", 102920122);
         // 返回freemarker模板的位置:基于resources\templates目录下 -- test1.ftl
         return "test1";
     }
