@@ -150,8 +150,8 @@
           templateName: '首页'
         },
         {
-          templateId: '5a962bf8b00ffc514038fafa',
-          templateName: '轮播图'
+          templateId: '5fba8015564fc325578b7d26',
+          templateName: '轮播图test02'
         }
       ]
     }

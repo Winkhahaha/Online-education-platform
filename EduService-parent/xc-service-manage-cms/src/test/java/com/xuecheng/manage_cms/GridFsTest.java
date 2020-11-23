@@ -44,6 +44,7 @@ public class GridFsTest {
         // 定义File
         File file = new File("E:\\CodeRepositories\\Online-education-platform\\EduService-parent\\test-freemarker\\src\\main\\resources\\templates\\index_banner.ftl");
         FileInputStream fileInputStream = new FileInputStream(file);
+        // 获取文件Id
         ObjectId objectId = gridFsTemplate.store(fileInputStream, "index_banner.ftl");
         System.out.println(objectId);
     }
@@ -59,6 +60,5 @@ public class GridFsTest {
         // 从流中取数据
         String content = IOUtils.toString(gridFsResource.getInputStream(), "utf-8");
         System.out.println(content);
-
     }
 }
