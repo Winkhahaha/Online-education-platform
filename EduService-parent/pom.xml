@@ -21,6 +21,8 @@
         <module>xc-service-api</module>
         <module>xc-service-manage-cms</module>
         <module>test-freemarker</module>
+        <module>test-rabbitMQ-producer</module>
+        <module>test-rabbitMQ-consumer</module>
     </modules>
 
     <properties>
