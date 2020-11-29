@@ -1,0 +1,15 @@
+页面发布测试完成,流程小结(以测试数据库CmsPage:test02为准):
+*以下为manage-cms服务端行为
+1.测试类GridFSTest上传模板html文件,返回一个模板ID;
+2.将测试类返回的模板文件Id设置给一个CmsTemplate(应为test02所对应的templateId数据,可以手工在数据库设置);
+3.通过获取CmsPage的dataUrl并将其作为参数交给restTemplate远程获取数据模型对象(Map类型,dataUrl为测试方便事先在数据库已设置,具体为数据库cms_config轮播图id);
+4.根据page对应的template对应的模板文件Id,获取模板内容,使用Freemaker将Map数据模型与模板内容绑定,生成静态HTML,返回HTML字符串内容;
+5.将HTML字符串内容转为为IO流,存储在GridFS中,返回一个Id --> cmsPage.setHtmlFileId(objectId.toHexString());
+6.向MQ发送消息(routingKey为siteId,消息体为JSON格式的pageId),通知客户端HTML文件流已经存储完成可以进行下载
+---------------------------------------------------------------------
+*以下为manage-cms-client客户端行为
+1.客户端监听MQ,收到服务端的消息后,调用客户端PageService的方法准备下载;
+2.通过上面CmsPage存储的htmlFileId从GridFS上获取文件对象,最终返回一个输入流;
+3.进行路径拼接,得到最终下载的html文件路径;
+4.进行输入输出流的copy,完成文件下载;
+5.启动nginx,刷新www.xuecheng.com,发现轮播图.html替换为我们生成的轮播图.html
