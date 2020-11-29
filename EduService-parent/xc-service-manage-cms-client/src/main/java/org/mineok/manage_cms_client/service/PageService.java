@@ -66,7 +66,7 @@ public class PageService {
         // 得到站点-页面的物理路径
         String pagePath = sitePhysicalPath + cmsPage.getPagePhysicalPath() + cmsPage.getPageName();
         // 将HTML文件保存在服务器的物理路径上
-        FileOutputStream outputStream = new FileOutputStream(new File("pagePath"));
+        FileOutputStream outputStream = new FileOutputStream(new File(pagePath));
         IOUtils.copy(inputStream, outputStream);
         inputStream.close();
         outputStream.close();

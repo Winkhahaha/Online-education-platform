@@ -201,10 +201,7 @@ public class PageService {
     // 根据Id查询cmsConfig
     public CmsConfig getConfigById(String Id) {
         Optional<CmsConfig> byId = cmsConfigRepository.findById(Id);
-        if (byId.isPresent()) {
-            return byId.get();
-        }
-        return null;
+        return byId.orElse(null);
     }
 
     // 总:页面静态化方法
