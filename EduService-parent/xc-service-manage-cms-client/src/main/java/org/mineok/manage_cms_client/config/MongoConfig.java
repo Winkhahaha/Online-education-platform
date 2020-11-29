@@ -1,4 +1,4 @@
-package com.xuecheng.manage_cms.config;
+package org.mineok.manage_cms_client.config;
 
 import com.mongodb.MongoClient;
 import com.mongodb.client.MongoDatabase;

@@ -7,6 +7,7 @@ import com.xuecheng.framework.domain.cms.response.CmsPageResult;
 import com.xuecheng.framework.model.response.QueryResponseResult;
 import com.xuecheng.framework.model.response.ResponseResult;
 import com.xuecheng.manage_cms.service.PageService;
+import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -64,5 +65,12 @@ public class CMSPageController implements CmsPageControllerApi {
     @DeleteMapping("/del/{pageId}")
     public ResponseResult delete(@PathVariable("pageId") String pageId) {
         return pageService.deletePageByPageId(pageId);
+    }
+
+    @SneakyThrows
+    @Override
+    @PostMapping("/postPage/{pageId}")
+    public ResponseResult post(@PathVariable("pageId") String pageId) {
+        return pageService.post(pageId);
     }
 }
