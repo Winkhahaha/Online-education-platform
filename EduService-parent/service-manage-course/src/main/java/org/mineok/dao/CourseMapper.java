@@ -11,5 +11,5 @@ import org.apache.ibatis.annotations.Mapper;
  */
 @Mapper
 public interface CourseMapper {
-   CourseBase findCourseBaseById(String id);
+    CourseBase findCourseBaseById(String id);
 }
