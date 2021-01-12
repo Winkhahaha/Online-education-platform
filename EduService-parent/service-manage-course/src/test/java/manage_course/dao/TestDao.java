@@ -1,5 +1,7 @@
 package manage_course.dao;
 
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import com.xuecheng.framework.domain.course.CourseBase;
 import com.xuecheng.framework.domain.course.ext.TeachplanNode;
 import org.junit.Test;
@@ -48,7 +50,15 @@ public class TestDao {
     @Test
     public void findTeachplanByOneTwoThreeNode() {
         TeachplanNode list = teachplanMapper.selectList("4028e581617f945f01617f9dabc40000");
-
         System.out.println(list);
+    }
+
+    @Test
+    public void findCourseListByPageHelper() {
+        // offset = (pageNum - 1) * pageSize
+        PageHelper.startPage(1, 5);
+        Page<CourseBase> courseList = courseMapper.findCourseList();
+        System.out.println("数据集:" + courseList.getResult());
+        System.out.println("总记录数:" + courseList.getTotal());
     }
 }

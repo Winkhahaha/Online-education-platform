@@ -1,18 +1,23 @@
 package org.mineok.service;
 
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import com.xuecheng.framework.domain.course.CourseBase;
+import com.xuecheng.framework.domain.course.CoursePic;
 import com.xuecheng.framework.domain.course.Teachplan;
+import com.xuecheng.framework.domain.course.ext.CourseInfo;
 import com.xuecheng.framework.domain.course.ext.TeachplanNode;
 import com.xuecheng.framework.exception.ExceptionCast;
 import com.xuecheng.framework.model.response.CommonCode;
+import com.xuecheng.framework.model.response.QueryResponseResult;
+import com.xuecheng.framework.model.response.QueryResult;
 import com.xuecheng.framework.model.response.ResponseResult;
-import org.mineok.dao.CourseBaseRepository;
-import org.mineok.dao.TeachplanMapper;
-import org.mineok.dao.TeachplanRepository;
+import org.mineok.dao.*;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
 import java.util.List;
@@ -32,6 +37,10 @@ public class CourseService {
     TeachplanRepository teachplanRepository;
     @Autowired
     CourseBaseRepository courseBaseRepository;
+    @Autowired
+    CourseMapper courseMapper;
+    @Autowired
+    CoursePicRepository coursePicRepository;
 
     // 课程计划(树)查询
     public TeachplanNode findTeachplan(String courseId) {
@@ -93,4 +102,52 @@ public class CourseService {
         // 发现该课程在课程计划表中存在根节点,则返回根节点Id
         return teachplanList.get(0).getId();
     }
+
+    // 查询所有课程
+    public QueryResponseResult getCourseList(int pageNum, int pageSize) {
+        PageHelper.startPage(pageNum, pageSize);
+        Page<CourseBase> courseList = courseMapper.findCourseList();
+        if (courseList.getResult() == null || courseList.getTotal() <= 0) {
+            return new QueryResponseResult(CommonCode.FAIL, null);
+        }
+        // 创建结果集
+        return new QueryResponseResult(CommonCode.SUCCESS, new QueryResult<>(courseList.getResult(), courseList.getTotal()));
+    }
+
+    // 添加课程与图片的关联信息(关联表)
+    @Transactional
+    public ResponseResult saveCoursePic(String courseId, String pic) {
+        // 查询课程图片
+        Optional<CoursePic> picOptional = coursePicRepository.findById(courseId);
+        CoursePic coursePic = null;
+        if (picOptional.isPresent()) {
+            coursePic = picOptional.get();
+        }
+        // 没有课程图片则新建对象
+        if (ObjectUtils.isEmpty(coursePic)) {
+            coursePic = new CoursePic();
+        }
+        coursePic.setPic(pic);
+        coursePic.setCourseid(courseId);
+        coursePicRepository.save(coursePic);
+        return new ResponseResult(CommonCode.SUCCESS);
+    }
+
+    // 查询课程图片
+    public CoursePic findCoursepic(String courseId) {
+        Optional<CoursePic> coursePic = coursePicRepository.findById(courseId);
+        return coursePic.orElse(null);
+    }
+
+    //删除课程图片
+    @Transactional
+    public ResponseResult deleteCoursePic(String courseId) {
+        //执行删除，返回1表示删除成功，返回0表示删除失败
+        long result = coursePicRepository.deleteByCourseid(courseId);
+        if (result > 0) {
+            return new ResponseResult(CommonCode.SUCCESS);
+        }
+        return new ResponseResult(CommonCode.FAIL);
+    }
+
 }
