@@ -9,6 +9,7 @@ import com.xuecheng.framework.model.response.ResponseResult;
 import org.mineok.manage_cms.service.PageService;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -22,6 +23,14 @@ import org.springframework.web.bind.annotation.*;
 public class CMSPageController implements CmsPageControllerApi {
     @Autowired
     private PageService pageService;
+    @Value("${server.port}")
+    private String serverPort;
+
+    // 测试ribbon负载均衡:通过判断服务端口
+    @GetMapping(value = "/nacos/{id}")
+    public String getPayment(@PathVariable("id") Integer id) {
+        return "nacos registry, serverPort: " + serverPort + "\t id" + id;
+    }
 
     // 测试案例
     @GetMapping("/list/{page}/{size}")

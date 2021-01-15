@@ -15,6 +15,7 @@
         <version>2.0.1.RELEASE</version>
     </parent>
     <modules>
+        <module>xc-service-base-filesystem</module>
         <module>xc-framework-common</module>
         <module>xc-framework-model</module>
         <module>xc-framework-utils</module>
@@ -26,6 +27,7 @@
         <module>xc-service-manage-cms-client</module>
         <module>service-manage-course</module>
         <module>test-fastdfs</module>
+        <module>xc-govern-center</module>
     </modules>
 
     <properties>
@@ -50,7 +52,6 @@
         <springfox-swagger.version>2.7.0</springfox-swagger.version>
         <fastjson.version>1.2.30</fastjson.version>
         <fastdfs-client-java.version>1.27.0.0</fastdfs-client-java.version>
-        <mysql-connector-java.version>5.1.40</mysql-connector-java.version>
         <elasticsearch.version>6.8.5</elasticsearch.version>
         <guava.version>24.0-jre</guava.version>
     </properties>
@@ -61,6 +62,13 @@
                 <groupId>org.springframework.cloud</groupId>
                 <artifactId>spring-cloud-dependencies</artifactId>
                 <version>Finchley.SR1</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.alibaba.cloud</groupId>
+                <artifactId>spring-cloud-alibaba-dependencies</artifactId>
+                <version>2.1.0.RELEASE</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>

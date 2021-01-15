@@ -1,8 +1,12 @@
 server:
-  port: 31001
+  port: ${PORT:31001}
 spring:
   application:
     name: xc-service-manage-cms
+  cloud:
+    nacos:
+      discovery:
+        server-addr: localhost:8848
   data:
     mongodb:
       uri:  mongodb://112.126.78.213:27017
