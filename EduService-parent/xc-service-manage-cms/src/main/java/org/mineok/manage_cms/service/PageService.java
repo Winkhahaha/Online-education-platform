@@ -35,6 +35,7 @@ import org.springframework.data.mongodb.gridfs.GridFsTemplate;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
+import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.client.RestTemplate;
 
@@ -155,10 +156,7 @@ public class PageService {
     // 根据pageId查询指定页面
     public CmsPage findByPageId(String pageId) {
         Optional<CmsPage> byId = cmsPageRepository.findById(pageId);
-        if (byId.isPresent()) {
-            return byId.get();
-        }
-        return null;
+        return byId.orElse(null);
     }
 
     // 修改指定页面
@@ -338,5 +336,15 @@ public class PageService {
         }
         // 发送给MQ(routingKey为页面对应的站点id)
         rabbitTemplate.convertAndSend(RabbitMQConfig.EX_ROUTING_CMS_POSTPAGE, cmsPage.getSiteId(), jsonString);
+    }
+
+    // 保存页面
+    public CmsPageResult save(CmsPage cmsPage) {
+        // 判断页面是否存在
+        CmsPage page = cmsPageRepository.findByPageNameAndSiteIdAndPageWebPath(cmsPage.getPageName(), cmsPage.getSiteId(), cmsPage.getPageWebPath());
+        if (!ObjectUtils.isEmpty(page)) {
+            return this.updatePage(page.getPageId(), page);
+        }
+        return this.addPage(page);
     }
 }

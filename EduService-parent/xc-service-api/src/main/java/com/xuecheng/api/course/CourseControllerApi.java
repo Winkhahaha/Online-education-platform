@@ -2,6 +2,8 @@ package com.xuecheng.api.course;
 
 import com.xuecheng.framework.domain.course.CoursePic;
 import com.xuecheng.framework.domain.course.Teachplan;
+import com.xuecheng.framework.domain.course.ext.CourseView;
+import com.xuecheng.framework.domain.course.response.CoursePublishResult;
 import com.xuecheng.framework.model.response.ResponseResult;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -22,13 +24,18 @@ public interface CourseControllerApi {
     ResponseResult addTeachplan(Teachplan teachplan);
 
     @ApiOperation("添加课程与图片的关联信息")
-    public ResponseResult addCoursePic(String courseId, String pic);
+    ResponseResult addCoursePic(String courseId, String pic);
 
     @ApiOperation("查询课程图片")
-    public CoursePic findCoursePic(String courseId);
+    CoursePic findCoursePic(String courseId);
 
     @ApiOperation("删除课程图片")
-    public ResponseResult deleteCoursePic(String courseId);
+    ResponseResult deleteCoursePic(String courseId);
 
+    @ApiOperation("课程视图查询")
+    CourseView courseview(String id);
+
+    @ApiOperation("预览课程")
+    CoursePublishResult preview(String id);
 
 }

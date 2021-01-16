@@ -24,16 +24,17 @@ public class ResponseResult implements Response {
     //提示信息
     String message;
 
-    public ResponseResult(ResultCode resultCode){
+    public ResponseResult(ResultCode resultCode) {
         this.success = resultCode.success();
         this.code = resultCode.code();
         this.message = resultCode.message();
     }
 
-    public static ResponseResult SUCCESS(){
+    public static ResponseResult SUCCESS() {
         return new ResponseResult(CommonCode.SUCCESS);
     }
-    public static ResponseResult FAIL(){
+
+    public static ResponseResult FAIL() {
         return new ResponseResult(CommonCode.FAIL);
     }
 

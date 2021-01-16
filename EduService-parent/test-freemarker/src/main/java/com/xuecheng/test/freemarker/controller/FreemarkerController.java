@@ -32,6 +32,17 @@ public class FreemarkerController {
         return "index_banner";
     }
 
+    @RequestMapping("/course")
+    public String course(Map<String, Object> map) {
+        // 使用restTemplate请求轮播图的模型数据
+        String dataUrl = "http://localhost:31200/course/courseview/297e7c7c62b888f00162b8a7dec20000";
+        ResponseEntity<Map> forEntity = restTemplate.getForEntity(dataUrl, Map.class);
+        Map body = forEntity.getBody();
+        // 设置模型数据
+        map.putAll(body);
+        return "course";
+    }
+
     // 测试1
     @RequestMapping("/test1")
     public String test1(Map<String, Object> map) {

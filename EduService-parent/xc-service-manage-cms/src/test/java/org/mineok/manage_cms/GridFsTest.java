@@ -42,10 +42,11 @@ public class GridFsTest {
     @Test   // 存文件
     public void testStore() throws FileNotFoundException {
         // 定义File
-        File file = new File("E:\\CodeRepositories\\Online-education-platform\\EduService-parent\\test-freemarker\\src\\main\\resources\\templates\\index_banner.ftl");
+        File file = new File("E:\\CodeRepositories\\Online-education-platform\\EduService-parent\\test-freemarker\\src\\main\\resources\\templates\\course.ftl");
         FileInputStream fileInputStream = new FileInputStream(file);
         // 获取文件Id
-        ObjectId objectId = gridFsTemplate.store(fileInputStream, "index_banner.ftl");
+        // 6002a1c344e24625e454ff7b
+        ObjectId objectId = gridFsTemplate.store(fileInputStream, "course.ftl");
         System.out.println(objectId);
     }
 
